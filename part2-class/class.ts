@@ -18,7 +18,7 @@ class Person {
   //   this.password = initPassword;
   // }
 
-  // 省略version
+  // 省略version public private protected などを入れて省略
   constructor(public name: string, public age: number, protected password: String) {
   }
 
@@ -65,13 +65,19 @@ class Teacher extends Person {
   /**
    * コンストラクターだけだとエラー。
    * 派生クラスのコンストラクターには 'super' の呼び出しを含める必要があります。
+   * 
+   * 新たに追加したい場合、public private protectedなどを記載して定義する。（_subjectを追加）
    */
   // constructor() { }
   constructor(name: string, age: number, password: string, public _subject: string) {
-    // 継承元のPersonのconstructor()の内容を記述。新しく追加したsubjectは省略可能
+    // 継承元のPersonのconstructor()の内容を記述。新しく追加したsubjectは省略可能
     super(name, age, password);
 
   }
+
+  /**
+   * geterとsetter
+   */
 
   get subject(): string {
     if (!this._subject) {
