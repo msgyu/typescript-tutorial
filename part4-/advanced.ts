@@ -126,4 +126,79 @@ havePet(new Bird());
 
 
 
+/**
+ * 型アサーション
+ */
+
+// NG
+const input = document.getElementById('input'); // nullable
+// HTMLElement インターフェース 抽象的
+
+
+// NG
+// const input2: HTMLInputElement = document.getElementById('input'); 
+// エラー：型 'HTMLInputElement | null' を型 'HTMLInputElement' に割り当てることはできません。型 'null' を型 'HTMLInputElement' に割り当てることはできません。
+
+
+// OK
+const inputAssertion = <HTMLInputElement>document.getElementById('input'); //型アサーション
+inputAssertion.value = 'initial input value';
+// JSXを利用する場合は向いていない。
+
+const inputAssertion2 = document.getElementById('input') as HTMLInputElement; //型アサーション
+// JSXでも対応可能
+
+
+//補足：これでもいけます
+(document.getElementById('input') as HTMLInputElement).value = 'initial input value';
+
+
+
+/**
+ * Non-null assertion operator
+ * !でnullを許容しない。
+ */
+
+
+const inputNonNullAssertion = document.getElementById('input')!; //non-nullアサーション!
+// inputNonNullAssertion.value = 'initial input value';
+// エラー：プロパティ 'value' は型 'HTMLElement' に存在しません。
+
+
+
+/**
+ * インデックスシグネチャ
+ */
+
+// 未使用
+interface Designer {
+    name: string;
+}
+
+const designer: Designer = {
+    name: 'Quill',
+    // role: 'roleは不可' // 型安全のため、不可
+}
+
+
+// 使用
+interface Designer2 {
+    name: string;
+    [index: string]: string; // インデックスシグネチャ: その他は指定した型にする。
+}
+
+const designer2: Designer2 = {
+    name: 'Quill',
+    role: 'roleは可能', // インデックスシグネチャで可能になる
+    1: 'keyが数字でもok',
+}
+
+console.log(designer2.test); // 存在しないプロパティも通ってしない....。
+
+
+
+/**
+ * 関数のオーバーロード
+ */
+
 
