@@ -53,11 +53,13 @@ function toUpperCase(x: string | number) {
 
   if (typeof x === 'string') {
     // string型が確定するので、string系のメソッドが利用可能になる。
-    return x.toUpperCase;
+    return x.toUpperCase();
   }
 
   return '';
 }
+
+
 
 type NomadWorker = Engineer | Blogger;
 function describeProfile(nomadWorker: NomadWorker) {
@@ -200,5 +202,22 @@ console.log(designer2.test); // 存在しないプロパティも通ってしな
 /**
  * 関数のオーバーロード
  */
+
+ function toUpperCase2(x: string): string; // オーバーロード
+ function toUpperCase2(x: string | number): number; // オーバーロード
+ function toUpperCase2(x: string | number): string | number {  // 元のメソッド
+    x.toString();
+    x.valueOf();
+  
+    if (typeof x === 'string') {
+      // string型が確定するので、string系のメソッドが利用可能になる。
+      return x.toUpperCase();
+    }
+  
+    return x;
+  }
+  
+//  const upperHello = toUpperCase2('hello') as string; // 毎回型アサーションをするのはめんどくさい。
+ const upperHello = toUpperCase2('hello'); // オーバーロードすることで、型アサーションしなくてもよい。
 
 
