@@ -384,6 +384,10 @@ let sourceClass2 = new AdvancedCar2();
 // エラー：型 'AdvancedCar2' を型 'AdvancedPerson2' に割り当てることはできません。プロパティ 'age' は型 'AdvancedPerson2' ではプライベートですが、型 'AdvancedCar2' ではプライベートではありません。
 
 
+/**
+ * ここから一旦飛ばすことにする。次はレクチャー83から。
+ * ここから先は実際に書いていき、気づきを得られる部分と判断
+ */
 
 
 
