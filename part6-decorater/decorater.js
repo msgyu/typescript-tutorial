@@ -62,3 +62,40 @@ const user21 = new User();
 const user22 = new User();
 const user23 = new User();
 const user24 = new User();
+/**
+ * 106: 簡易的なフレームワークを作成する
+ */
+function Logging3(message) {
+    return function (constructor) {
+        console.log(message);
+        console.log(constructor);
+    };
+}
+function Component(template, selector) {
+    return function (constructor) {
+        const mountedElement = document.querySelector(selector);
+        const instance = new constructor(); //Functionクラスだと、エラー。この式はコンストラクト可能ではありません。型 'Function' にはコンストラクト シグネチャがありません。ts(2351)
+        if (mountedElement) {
+            mountedElement.innerHTML = template; // 挿入するHTMLは第一引数のtemplate
+            mountedElement.querySelector('h1').textContent = instance.name; // templateにあるh1タグを見つけて、instance.nameをテキスト挿入。
+        }
+    };
+}
+let User3 = class User3 {
+    constructor() {
+        this.name = 'Quill';
+        console.log('User was created!');
+    }
+};
+User3 = __decorate([
+    Component('<h1>{{ name }}</h1>', '#app') // User3.nameを入れる 
+    ,
+    Logging3('Loging user') // ()をつけている。なので、引数が利用可能になる。
+], User3);
+const user31 = new User();
+const user32 = new User();
+const user33 = new User();
+const user34 = new User();
+/**
+ *  107: 複数のデコレータを同時に利用する。
+ */
