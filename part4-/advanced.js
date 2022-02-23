@@ -145,4 +145,84 @@ const userDateOr = downloadedDate.user || 'no-user'; // falseの条件が異な�
 // } | undefined
 /**
  * 型の互換性
+ * リテラル型はstring型と互換性がない。
+ * enumとnumberは互換性がある。ただし、enum型とenum型は互換性がない。
+ * 関数は元の関数が優先される。多い = 少ない の場合、エラーが発生しない。 少 = 多 だった場合、エラーになる。どちらにせよ、メソッド使用時にエラーになる。
  */
+let target = 'hello';
+let source = 'hello';
+target = source;
+// let target: string
+// string型だから、'hello'を受け入れられる。
+// 逆にするとエラー
+let target2 = 'hello';
+let source2 = 'hello';
+// target2 = source2;  //型 'string' を型 '"hello"' に割り当てることはできません。
+// let target2: "hello"
+// 'hello'だがstring型を含めて型定義を=にすることはできない。
+// つまり、条件を満たせていないので、型の上書きはできない。
+// リテラル型はstring型と互換性がない。
+var Color;
+(function (Color) {
+    Color[Color["RED"] = 0] = "RED";
+    Color[Color["BLUE"] = 1] = "BLUE";
+})(Color || (Color = {}));
+let target3 = Color.RED; //(enum member) Color.RED = 0
+// let target3: Color
+let source3 = 0;
+target3 = source3;
+// let target3: Color
+// enum型とnumberは互換性がある。
+// enum型とenum型は互換性がない。
+/**
+ * 関数の型の互換性
+ */
+let targetFunction = function (a) { };
+let sourceFunction = function (a, b) { };
+// targetFunction = sourceFunction; // エラーあり
+// let targetFunction: (a: string) => void
+//エラー：型 '(a: string, b: string) => void' を型 '(a: string) => void' に割り当てることはできません。
+// 型を増やせない？？？？
+targetFunction('hi');
+// エラーが出ない。
+let targetFunction2 = function (a, b) { };
+let sourceFunction2 = function (a) { };
+targetFunction2 = sourceFunction2; // エラーなし
+// let targetFunction2: (a: string, b: string) => void
+// 型はそのまま。上書きされていない。
+// let targetFunctionTest = targetFunction2('hi'); // エラー
+// 2 個の引数が必要ですが、1 個指定されました。
+//　元の型の方が優先される。
+let targetFunctionTest2 = targetFunction2('hi', 'hello');
+/**
+ * Classの型の互換性
+ */
+class AdvancedPerson {
+    constructor() {
+        this.name = 'Peter';
+    }
+}
+class AdvancedCar {
+    constructor() {
+        this.name = 'Peter';
+    }
+}
+let targetClass = new AdvancedPerson();
+let sourceClass = new AdvancedCar();
+targetClass = sourceClass; // エラーなし
+class AdvancedPerson2 {
+    constructor() {
+        this.name = 'Peter';
+        this.age = 35; // privateは他のclassと互換性がない。
+    }
+}
+class AdvancedCar2 {
+    constructor() {
+        this.name = 'Peter';
+        this.age = 5;
+    }
+}
+let targetClass2 = new AdvancedPerson2();
+let sourceClass2 = new AdvancedCar2();
+// targetClass2 = sourceClass2; // エラーあり
+// エラー：型 'AdvancedCar2' を型 'AdvancedPerson2' に割り当てることはできません。プロパティ 'age' は型 'AdvancedPerson2' ではプライベートですが、型 'AdvancedCar2' ではプライベートではありません。
