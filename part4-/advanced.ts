@@ -217,7 +217,71 @@ console.log(designer2.test); // 存在しないプロパティも通ってしな
     return x;
   }
   
-//  const upperHello = toUpperCase2('hello') as string; // 毎回型アサーションをするのはめんどくさい。
- const upperHello = toUpperCase2('hello'); // オーバーロードすることで、型アサーションしなくてもよい。
+ const upperHello1 = toUpperCase2('hello'); // const upperHello1: string | number
+ const upperHello2 = toUpperCase2('hello') as string; // 毎回型アサーションをするのはめんどくさい。
+ const upperHello3 = toUpperCase2('hello'); // オーバーロードすることで、型アサーションしなくてもよい。
+
+
+/**
+ * Optional Chaining
+ */
+
+interface DownloadedDate {
+    id: number;
+    user?: {
+        name?: {
+            first: string;
+            last: string;
+        }
+    }
+}
+
+const downloadedDateNonUser: DownloadedDate = {
+    id: 1,
+}
+
+const downloadedDate: DownloadedDate = {
+    id: 1,
+    user: {
+        name: {
+            first: "田中",
+            last: "太郎"
+        }
+    }
+}
+
+// console.log(downloadedDate.user.name.first); // オブジェクトは 'undefined' である可能性があります。
+// console.log(downloadedDate.user!.name.first); // Non-null アサーション → エラー： Object is possibly 'undefined'.
+console.log(downloadedDate.user?.name?.first); // ? nullの場合、undefineを返す。
+
+const userDate = downloadedDate.user ?? 'no-user'; // Nulish Coalescing
+const userDateOr = downloadedDate.user || 'no-user'; // falseの条件が異なる。0や空でもfalse
+
+
+/**
+ * Look Up 型
+ */
+
+type id = DownloadedDate['id']; // オブジェクトで定義された項目のみ可能。この場合、idかuser
+// type id = number
+
+type user = DownloadedDate['user'];
+// type user = {
+//     name?: {
+//         first: string;
+//         last: string;
+//     } | undefined;
+// } | undefined
+
+
+/**
+ * 型の互換性
+ */
+
+
+
+
+
+
 
 
