@@ -118,3 +118,71 @@ fetchData.then(data => {
 const vegetables: Array<string> = ['Tomato', 'Broccoli'];
 
 
+
+/**
+ * デフォルトの型を設定する。
+ */
+
+interface ResponseData<T = any> {
+    data: T;
+    status: number;
+}
+
+let tmp2: ResponseData;
+
+
+interface ResponseData2<T extends { message: string} = any> {
+    data: T;
+    status: number;
+}
+
+let tmp3: ResponseData2;
+
+
+/**
+ * 反復処理 Mapped Types
+ */
+
+type MappedTypes = {
+    [P in 'tomato' | 'pumpkin']: string
+}
+// type MappedTypes = {
+//     tomato: "tomato";
+//     pumpkin: "pumpkin";
+// }
+
+type MappedTypes3<T> = {
+    [P in keyof T]: string
+}
+
+type MappedTypes4<T> = {
+    readonly [P in keyof T]: string // readonlyをすべて付与
+}
+
+type MappedTypes5<T> = {
+    readonly [P in keyof T]?: string // nullable
+}
+
+type MappedTypes6<T> = {
+    -readonly [P in keyof T]?: string // readonlyを消す
+}
+
+
+/**
+ * Conditional Types
+ * 型のif文のようなもの（三項演算子のようなもの）
+ */
+
+type ConditionalTypes = 'tomato' extends string ? number : boolean; 
+// type ConditionalTypes = number
+// extendsで制約をつける。
+// 三項演算子のように設定できる。
+
+type DistributiveConditionalTypes = ('tomato' | 'pumplin') extends 'tomato' ? number : boolean;
+// type DistributiveConditionalTypes = boolean
+
+type DistributiveConditionalTypes2<T> = T extends 'tomato' ? number : boolean;
+let tmp4: DistributiveConditionalTypes2<'tomato'>
+// type DistributiveConditionalTypes2<T> = T extends "tomato" ? number : boolean
+
+
