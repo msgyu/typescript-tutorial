@@ -64,6 +64,7 @@ const user23 = new User();
 const user24 = new User();
 /**
  * 106: 簡易的なフレームワークを作成する
+ * デコレータは下から実行される。
  */
 function Logging3(message) {
     return function (constructor) {
@@ -88,14 +89,47 @@ let User3 = class User3 {
     }
 };
 User3 = __decorate([
-    Component('<h1>{{ name }}</h1>', '#app') // User3.nameを入れる 
+    Component('<h1>{{ name }}</h1>', '#app') // User3.nameを入れる  2番目に実行
     ,
-    Logging3('Loging user') // ()をつけている。なので、引数が利用可能になる。
+    Logging3('Loging user') // ()をつけている。なので、引数が利用可能になる。 1番目に実行
 ], User3);
-const user31 = new User();
-const user32 = new User();
-const user33 = new User();
-const user34 = new User();
+const user31 = new User3();
+const user32 = new User3();
+const user33 = new User3();
+const user34 = new User3();
 /**
+ * 2022/2/27
  *  107: 複数のデコレータを同時に利用する。
+ */
+function Component2(template, selector) {
+    return function (constructor) {
+        const mountedElement = document.querySelector(selector);
+        console.log('Component 4回目');
+        const instance = new constructor(); //Functionクラスだと、エラー。この式はコンストラクト可能ではありません。型 'Function' にはコンストラクト シグネチャがありません。ts(2351)
+        if (mountedElement) {
+            mountedElement.innerHTML = template; // 挿入するHTMLは第一引数のtemplate
+            mountedElement.querySelector('h1').textContent = instance.name; // templateにあるh1タグを見つけて、instance.nameをテキスト挿入。
+        }
+    };
+}
+let User4 = class User4 {
+    constructor() {
+        this.name = 'Quill';
+        console.log('User was created!');
+    }
+};
+User4 = __decorate([
+    Component2('<h1>{{ name }}</h1>', '#app') // User3.nameを入れる  2番目に実行
+    ,
+    Logging3('これが4回目のLoging user') // ()をつけている。なので、引数が利用可能になる。 1番目に実行
+], User4);
+const user41 = new User4();
+const user42 = new User4();
+const user43 = new User4();
+const user44 = new User4();
+/**
+ * 108: 別のクラスに変更する
+ */
+/**
+ * 109: プロパティに対して、デコレータする
  */
