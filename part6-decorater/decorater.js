@@ -100,26 +100,54 @@ const user34 = new User3();
 /**
  * 2022/2/27
  *  107: 複数のデコレータを同時に利用する。
+ *  108: 別のクラスに変更する
  */
-function Component2(template, selector) {
+//  function Component2(template: string, selector: string) {
+//     return function <T extends { new(...args: any[]): { name: string } }>(constructor: T) {{ // ...args: anyでプロパティが複数あっても対応できる。
+//         return class extends constructor {
+//             // name = 'hello' // nameがないとエラー
+//             // age // constructor: { new(...args: any): { name: string } }に含まれていないのでエラーになる。
+//             // ジェネリクスで対応
+//             constructor(...args: any[]) {
+//                 super(...args);
+//                 console.log('Component');
+//                 const mountedElement = document.querySelector(selector);
+//                 console.log('Component 4回目');
+//                 const instance = new constructor(); //Functionクラスだと、エラー。この式はコンストラクト可能ではありません。型 'Function' にはコンストラクト シグネチャがありません。ts(2351)
+//                 if (mountedElement) {
+//                     mountedElement.innerHTML = template; // 挿入するHTMLは第一引数のtemplate
+//                     mountedElement.querySelector('h1')!.textContent = instance.name; // templateにあるh1タグを見つけて、instance.nameをテキスト挿入。
+//                 }
+//             }
+//         }
+//     }
+// }
+function Component4(template, selector) {
+    console.log('Component Factory');
     return function (constructor) {
-        const mountedElement = document.querySelector(selector);
-        console.log('Component 4回目');
-        const instance = new constructor(); //Functionクラスだと、エラー。この式はコンストラクト可能ではありません。型 'Function' にはコンストラクト シグネチャがありません。ts(2351)
-        if (mountedElement) {
-            mountedElement.innerHTML = template; // 挿入するHTMLは第一引数のtemplate
-            mountedElement.querySelector('h1').textContent = instance.name; // templateにあるh1タグを見つけて、instance.nameをテキスト挿入。
-        }
+        return class extends constructor {
+            constructor(...args) {
+                super(...args);
+                console.log('Component');
+                const mountedElement = document.querySelector(selector);
+                const instance = new constructor();
+                if (mountedElement) {
+                    mountedElement.innerHTML = template;
+                    mountedElement.querySelector('h1').textContent = instance.name;
+                }
+            }
+        };
     };
 }
 let User4 = class User4 {
     constructor() {
         this.name = 'Quill';
+        this.age = 24; // 追加すると@Component2はエラーになる。ageがないため。
         console.log('User was created!');
     }
 };
 User4 = __decorate([
-    Component2('<h1>{{ name }}</h1>', '#app') // User3.nameを入れる  2番目に実行
+    Component4('<h1>{{ name }}</h1>', '#app') // User3.nameを入れる  2番目に実行
     ,
     Logging3('これが4回目のLoging user') // ()をつけている。なので、引数が利用可能になる。 1番目に実行
 ], User4);
@@ -127,9 +155,6 @@ const user41 = new User4();
 const user42 = new User4();
 const user43 = new User4();
 const user44 = new User4();
-/**
- * 108: 別のクラスに変更する
- */
 /**
  * 109: プロパティに対して、デコレータする
  */
